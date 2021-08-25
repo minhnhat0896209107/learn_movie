@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="cardTitles">
+        <item>Film1</item>
+        <item>Film2</item>
+        <item>Film3</item>
+        <item>Film4</item>
+        <item>Film5</item>
+        <item>Film6</item>
+        <item>Film7</item>
+        <item>Film8</item>
+        <item>Film9</item>
+        <item>Film10</item>
+    </string-array>
+</resources>
