@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.moviefilm.R
 import com.example.moviefilm.pojo.model.Favorite
 
-class RecyclerViewFavorite : RecyclerView.Adapter<RecyclerViewFavorite.RecyclerVH>() {
+class FavoriteAdapter : RecyclerView.Adapter<FavoriteAdapter.FavoriteVH>() {
     private var listFavourite = mutableListOf<Favorite>()
 
     fun getListFavourite(listFavourite : MutableList<Favorite>){
@@ -18,7 +18,7 @@ class RecyclerViewFavorite : RecyclerView.Adapter<RecyclerViewFavorite.RecyclerV
         notifyDataSetChanged()
     }
 
-    class RecyclerVH(view : View) : RecyclerView.ViewHolder(view){
+    class FavoriteVH(view : View) : RecyclerView.ViewHolder(view){
         private val tvFavorite : TextView = view.findViewById(R.id.tv_favourite)
         private val ivFavorite : ImageView = view.findViewById(R.id.iv_fg_favourite)
 
@@ -32,12 +32,12 @@ class RecyclerViewFavorite : RecyclerView.Adapter<RecyclerViewFavorite.RecyclerV
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerVH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteVH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_favourite, parent, false)
-        return RecyclerVH(view)
+        return FavoriteVH(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerVH, position: Int) {
+    override fun onBindViewHolder(holder: FavoriteVH, position: Int) {
         listFavourite.let { holder.bind(it[position]) }
     }
 

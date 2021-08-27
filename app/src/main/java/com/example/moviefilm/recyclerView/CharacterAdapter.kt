@@ -10,14 +10,14 @@ import com.bumptech.glide.Glide
 import com.example.moviefilm.R
 import com.example.moviefilm.pojo.model.detail.ProductionCompany
 
-class RecyclerViewCharacter : RecyclerView.Adapter<RecyclerViewCharacter.RecyclerVH>() {
+class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterVH>() {
     private var listCharacter = mutableListOf<ProductionCompany>()
 
     fun setListCharacter(listCharacter: MutableList<ProductionCompany>){
         this.listCharacter = listCharacter
         notifyDataSetChanged()
     }
-    class RecyclerVH(view: View): RecyclerView.ViewHolder(view){
+    class CharacterVH(view: View): RecyclerView.ViewHolder(view){
         private val ivCharacter : ImageView = view.findViewById(R.id.ivCharacter)
         private val tvNameCharacter : TextView = view.findViewById(R.id.tvNameCharacter)
         fun bind(data: ProductionCompany){
@@ -29,12 +29,12 @@ class RecyclerViewCharacter : RecyclerView.Adapter<RecyclerViewCharacter.Recycle
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerVH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CharacterVH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_character, parent, false)
-        return RecyclerVH(view)
+        return CharacterVH(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerVH, position: Int) {
+    override fun onBindViewHolder(holder: CharacterVH, position: Int) {
         listCharacter.let { holder.bind(it[position]) }
     }
 

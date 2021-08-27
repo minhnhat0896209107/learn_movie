@@ -1,6 +1,5 @@
 package com.example.moviefilm.pojo.model.detail
 
-
 import com.google.gson.annotations.SerializedName
 
 data class Detail(

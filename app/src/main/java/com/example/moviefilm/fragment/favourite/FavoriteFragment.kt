@@ -6,13 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.moviefilm.R
-import com.example.moviefilm.recyclerView.RecyclerViewFavorite
+import com.example.moviefilm.recyclerView.FavoriteAdapter
 
 
 class FavoriteFragment : Fragment() {
     private var nameFilm: String? = null
     private var imageFilm: String? = null
-    private lateinit var recyclerViewFavorite : RecyclerViewFavorite
+    private lateinit var favoriteAdapter : FavoriteAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,7 +27,7 @@ class FavoriteFragment : Fragment() {
     }
 
     fun init(){
-        recyclerViewFavorite = RecyclerViewFavorite()
+        favoriteAdapter = FavoriteAdapter()
 
     }
 

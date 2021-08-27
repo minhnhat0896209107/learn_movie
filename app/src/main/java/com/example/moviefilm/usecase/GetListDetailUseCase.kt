@@ -5,7 +5,7 @@ import com.example.moviefilm.pojo.repo.MovieRepository3
 import retrofit2.Call
 import javax.inject.Inject
 
-class GetListDetailUseCase3 @Inject constructor(
+class GetListDetailUseCase @Inject constructor(
     private val repository3: MovieRepository3
 ) {
     fun excute(id : Int) : Call<Detail> {

@@ -8,37 +8,37 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.moviefilm.R
-import com.example.moviefilm.pojo.model.detail.Detail
+import com.example.moviefilm.pojo.model.list_video.Result
 
-class RecyclerViewTrailer : RecyclerView.Adapter<RecyclerViewTrailer.RecyclerVH>(){
-    private var listTrailer = mutableListOf<Detail>()
+class TrailerAdapter : RecyclerView.Adapter<TrailerAdapter.TrailerVH>(){
+    private var listTrailer = mutableListOf<Result>()
 
-    fun setListTrailer(listTrailer : MutableList<Detail>){
+    fun setListTrailer(listTrailer : MutableList<Result>){
         this.listTrailer = listTrailer
         notifyDataSetChanged()
     }
 
-    class RecyclerVH(view: View) : RecyclerView.ViewHolder(view){
+    class TrailerVH(view: View) : RecyclerView.ViewHolder(view){
         private val ivTrailer : ImageView = view.findViewById(R.id.ivTrailer)
         private val tvNameTrailer : TextView = view.findViewById(R.id.tvNameTrailer)
 
-        fun bind(data : Detail){
+        fun bind(data : Result){
             Glide.with(ivTrailer)
-                .load(data.homepage)
+                .load("https://www.youtube.com/watch?v=${data.key}")
                 .error(R.drawable.loading)
                 .into(ivTrailer)
 
-            tvNameTrailer.text = data.originalTitle
+            tvNameTrailer.text = data.name
         }
 
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerVH {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrailerVH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_trailier_film, parent, false)
-        return RecyclerVH(view)
+        return TrailerVH(view)
     }
 
-    override fun onBindViewHolder(holder: RecyclerVH, position: Int) {
+    override fun onBindViewHolder(holder: TrailerVH, position: Int) {
         listTrailer.let { holder.bind(it[position]) }
     }
 

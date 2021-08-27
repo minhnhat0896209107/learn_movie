@@ -1,19 +1,16 @@
 package com.example.moviefilm.pojo.di
 
-import androidx.navigation.Navigator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
-import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(ApplicationComponent::class)
-object MovieModule3 {
+object MovieModule {
     @Singleton
     @Provides
     fun getMovieRetrofit() : Retrofit {
@@ -25,8 +22,8 @@ object MovieModule3 {
 
     @Singleton
     @Provides
-    fun getMovieService3(retrofit: Retrofit) : MovieService3{
-        return retrofit.create(MovieService3::class.java)
+    fun getMovieService3(retrofit: Retrofit) : MovieService{
+        return retrofit.create(MovieService::class.java)
     }
 
 }

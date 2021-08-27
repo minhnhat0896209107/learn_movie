@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <ImageView
+        android:scaleType="fitXY"
         android:padding="10dp"
         android:id="@+id/ivTrailer"
-        android:src="@drawable/image_trailer"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="200dp"/>
     <TextView
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

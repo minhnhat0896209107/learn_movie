@@ -2,7 +2,7 @@ package com.example.moviefilm.pojo.model.list_movie
 
 import com.google.gson.annotations.SerializedName
 
-data class Movie3(
+data class Movie(
     @SerializedName("backdrop_path")
     val image_backdrop : String?=null,
     @SerializedName("id")

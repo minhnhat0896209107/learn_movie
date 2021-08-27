@@ -15,9 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.moviefilm.R
 import com.example.moviefilm.pojo.model.detail.Genre
 import com.example.moviefilm.pojo.model.detail.ProductionCompany
-import com.example.moviefilm.recyclerView.RecyclerViewCatelory
-import com.example.moviefilm.recyclerView.RecyclerViewCharacter
-import com.example.moviefilm.recyclerView.RecyclerViewTrailer
+import com.example.moviefilm.pojo.model.list_video.Result
+import com.example.moviefilm.recyclerView.CategoryAdapter
+import com.example.moviefilm.recyclerView.CharacterAdapter
+import com.example.moviefilm.recyclerView.TrailerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_film.*
 
@@ -37,10 +38,11 @@ class FilmActivity : AppCompatActivity() {
     private lateinit var ivFavourite: ImageView
     private lateinit var tvVoteCount : TextView
 
-    private lateinit var rcvCharacterAdapter: RecyclerViewCharacter
-    private lateinit var rcvCateloryAdapter: RecyclerViewCatelory
-    private lateinit var rcvTrailerAdapter: RecyclerViewTrailer
+    private lateinit var characterAdapter: CharacterAdapter
+    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var trailerAdapter: TrailerAdapter
     private lateinit var linearHori: LinearLayoutManager
+    private lateinit var linearHorizon: LinearLayoutManager
     private lateinit var linearVerti: LinearLayoutManager
     private lateinit var gridLayoutManager: GridLayoutManager
     private val viewModel : FilmViewModel by viewModels()
@@ -52,11 +54,12 @@ class FilmActivity : AppCompatActivity() {
         id = intent.getIntExtra("keyId", 0)
 
         init()
-        getRecyclerViewCharacter()
+        getRecyclerView()
         eventOnClick()
         eventRegisterObs()
 
         viewModel.getListDetail(id)
+        viewModel.getListVideo(id)
     }
 
     @SuppressLint("SetTextI18n")
@@ -89,18 +92,24 @@ class FilmActivity : AppCompatActivity() {
                     tvDescription.text = t.listDetail?.overview
                     tvVoteCount.text = "${t.listDetail?.voteCount} votes"
 
-                    Glide.with(ivTrailer)
-                        .load(t.listDetail?.homepage)
-                        .error(R.drawable.loading)
-                        .into(ivTrailer)
-                    tvNameTrailer.text = t.listDetail?.originalTitle
+                    categoryAdapter.setListCategory(t.listDetail?.genres as MutableList<Genre>)
+                    characterAdapter.setListCharacter(t.listDetail.productionCompanies as MutableList<ProductionCompany>)
 
-                    rcvCateloryAdapter.setListCatelory(t.listDetail?.genres as MutableList<Genre>)
-                    rcvCharacterAdapter.setListCharacter(t.listDetail.productionCompanies as MutableList<ProductionCompany>)
-
-//                    rcvTrailerAdapter.setListTrailer(t.listDetail?.homepage as MutableList<Detail>)
                 }
 
+            }
+        })
+
+
+        viewModel.liveDataVideo.observe(this, Observer {
+            t->
+            when(t){
+                is FilmViewModel.GetListVideo.Error -> t.message
+                is FilmViewModel.GetListVideo.Success -> {
+                    t.listVideo?.results
+
+                    trailerAdapter.setListTrailer(t.listVideo?.results as MutableList<Result>)
+                }
             }
         })
     }
@@ -110,10 +119,8 @@ class FilmActivity : AppCompatActivity() {
         ivBack.setOnClickListener {
             finish()
         }
-
         ivFavourite.setOnClickListener {
             changeFavourite()
-
         }
     }
 
@@ -130,11 +137,12 @@ class FilmActivity : AppCompatActivity() {
         tvDate = findViewById(R.id.tv_date)
         tvVoteCount = findViewById(R.id.tv_vote_count)
 
-        rcvCharacterAdapter = RecyclerViewCharacter()
-        rcvTrailerAdapter = RecyclerViewTrailer()
-        rcvCateloryAdapter = RecyclerViewCatelory()
+        characterAdapter = CharacterAdapter()
+        trailerAdapter = TrailerAdapter()
+        categoryAdapter = CategoryAdapter()
 
         linearHori = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+        linearHorizon = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         linearVerti = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 
         gridLayoutManager = GridLayoutManager(this, 2)
@@ -142,17 +150,20 @@ class FilmActivity : AppCompatActivity() {
     }
 
 
-    fun getRecyclerViewCharacter() {
+    fun getRecyclerView() {
         recyclerViewCharacter.layoutManager = linearHori
         recyclerViewCharacter.setHasFixedSize(true)
-        recyclerViewCharacter.adapter = rcvCharacterAdapter
+        recyclerViewCharacter.adapter = characterAdapter
 
 
-        recyclerViewCatelory.layoutManager = linearVerti
-        recyclerViewCatelory.setHasFixedSize(true)
-        recyclerViewCatelory.adapter = rcvCateloryAdapter
+        recyclerViewCategory.layoutManager = gridLayoutManager
+        recyclerViewCategory.setHasFixedSize(true)
+        recyclerViewCategory.adapter = categoryAdapter
+
+        recyclerViewTrailer.layoutManager = linearHorizon
+        recyclerViewTrailer.setHasFixedSize(true)
+        recyclerViewTrailer.adapter = trailerAdapter
     }
-
 
     private fun changeFavourite() {
         ivFavourite.setImageResource(

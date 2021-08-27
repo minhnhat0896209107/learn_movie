@@ -2,17 +2,15 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="5dp"
     android:orientation="vertical">
     <TextView
-        android:id="@+id/tvCatelory"
+        android:id="@+id/tvCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
         android:background="@drawable/custom_border_black_oval"
         android:padding="5dp"
         android:text="@string/adventure"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
 
 </LinearLayout>
