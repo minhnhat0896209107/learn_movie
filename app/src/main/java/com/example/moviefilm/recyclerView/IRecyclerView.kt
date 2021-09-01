@@ -44,7 +44,7 @@ class IRecyclerView @JvmOverloads constructor(
         onLoadMoreScrollListener.setReverseScrolled(reverseEnable)
     }
     fun setOnLoadMoreListener(listener: OnLoadMoreListener){
-        onLoadMoreListener =listener
+        onLoadMoreListener = listener
     }
 
     interface OnLoadMoreListener{

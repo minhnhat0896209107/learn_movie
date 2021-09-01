@@ -11,8 +11,8 @@ import com.example.moviefilm.pojo.model.detail.Genre
 class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryVH>() {
     private var listCategory = mutableListOf<Genre>()
 
-    fun setListCategory(listCategory: MutableList<Genre>){
-        this.listCategory = listCategory
+    fun setListCategory(listCategory: List<Genre>){
+        this.listCategory.addAll(listCategory)
         notifyDataSetChanged()
     }
 
@@ -25,7 +25,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryAdapter.CategoryVH>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryVH {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_genres, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_category, parent, false)
         return CategoryVH(view)
     }
 

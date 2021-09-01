@@ -13,8 +13,8 @@ import com.example.moviefilm.pojo.model.list_video.Result
 class TrailerAdapter : RecyclerView.Adapter<TrailerAdapter.TrailerVH>(){
     private var listTrailer = mutableListOf<Result>()
 
-    fun setListTrailer(listTrailer : MutableList<Result>){
-        this.listTrailer = listTrailer
+    fun setListTrailer(listTrailer : List<Result>){
+        this.listTrailer.addAll(listTrailer)
         notifyDataSetChanged()
     }
 

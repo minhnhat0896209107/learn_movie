@@ -16,7 +16,6 @@ class ViewPagerAdapter(fm: FragmentManager, behavior: Int) : FragmentStatePagerA
         return when(position){
             0 -> DiscoverFragment()
             1 -> FavoriteFragment()
-
             else -> DiscoverFragment()
         }
     }

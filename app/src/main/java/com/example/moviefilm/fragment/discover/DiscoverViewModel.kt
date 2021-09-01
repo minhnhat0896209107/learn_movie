@@ -1,6 +1,5 @@
 package com.example.moviefilm.fragment.discover
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.example.moviefilm.pojo.model.list_movie.Movie
@@ -20,29 +19,31 @@ class DiscoverViewModel @ViewModelInject constructor(
     val liveDataLoadMovie: LiveData<ListMovieState> = _liveDataLoadMovie
 
     var page: Int = 1
-    fun getListMovie( focusUpdate: Boolean = false){
+    fun getListMovie(focusUpdate: Boolean = false) {
         _liveDataLoadMovie.postValue(ListMovieState.Loading)
         if (focusUpdate) page = 1
         getListMovieUseCase3.excute(page)
             .enqueue(object : Callback<MovieResponse> {
                 override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
                     _liveDataLoadMovie.postValue(ListMovieState.Error(t.message.toString()))
-                    Log.d("ABC", t.message.toString())
                 }
-                override fun onResponse(call: Call<MovieResponse>, movieResponse: Response<MovieResponse>) {
-                    if(movieResponse.body()?.movie != null) page++
+                override fun onResponse(
+                    call: Call<MovieResponse>,
+                    movieResponse: Response<MovieResponse>
+                ) {
+                    if (movieResponse.body()?.movie != null) page++
                     _liveDataLoadMovie.postValue(movieResponse.body()?.movie?.let {
                         ListMovieState.Success(it, focusUpdate)
                     })
-                    Log.d("ABC", "Repo = ${movieResponse.body()}")
                 }
             })
     }
 
-    sealed class ListMovieState{
+    sealed class ListMovieState {
         object Loading : ListMovieState()
         class Error(val message: String) : ListMovieState()
-        class Success(val movieResponse: List<Movie>, val focusUpdate: Boolean = false) : ListMovieState()
+        class Success(val movieResponse: List<Movie>, val focusUpdate: Boolean = false) :
+            ListMovieState()
     }
 }
 

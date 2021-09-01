@@ -1,14 +1,14 @@
 package com.example.moviefilm.usecase
 
 import com.example.moviefilm.pojo.model.detail.Detail
-import com.example.moviefilm.pojo.repo.MovieRepository3
+import com.example.moviefilm.pojo.repo.MovieRepository
 import retrofit2.Call
 import javax.inject.Inject
 
 class GetListDetailUseCase @Inject constructor(
-    private val repository3: MovieRepository3
+    private val repository: MovieRepository
 ) {
     fun excute(id : Int) : Call<Detail> {
-        return repository3.getDetailMovie3(id)
+        return repository.getDetailMovie(id)
     }
 }

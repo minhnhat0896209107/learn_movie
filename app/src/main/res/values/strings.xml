@@ -3,7 +3,6 @@
     <string name="search_product">Search Product..</string>
     <string name="popular_with_friend">POPULAR WITH FRIEND</string>
     <string name="discover">Discover</string>
-    <string name="favorite">Favorite</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="popular">Popular</string>
@@ -22,4 +21,5 @@
     <string name="_210720_votes">210720 votes</string>
     <string name="language">Language</string>
     <string name="todo">TODO</string>
+    <string name="favorite">Favorite</string>
 </resources>

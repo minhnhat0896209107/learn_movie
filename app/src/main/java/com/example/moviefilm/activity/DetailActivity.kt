@@ -1,6 +1,5 @@
 package com.example.moviefilm.activity
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,30 +12,28 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.moviefilm.R
-import com.example.moviefilm.pojo.model.detail.Genre
-import com.example.moviefilm.pojo.model.detail.ProductionCompany
-import com.example.moviefilm.pojo.model.list_video.Result
+import com.example.moviefilm.fragment.favourite.FavoriteFragment
+import com.example.moviefilm.pojo.model.detail.Detail
 import com.example.moviefilm.recyclerView.CategoryAdapter
 import com.example.moviefilm.recyclerView.CharacterAdapter
 import com.example.moviefilm.recyclerView.TrailerAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_film.*
 
-
 @AndroidEntryPoint
-class FilmActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity() {
     private var id: Int = 0
 
     private lateinit var tvTitle: TextView
     private lateinit var tvDate: TextView
     private lateinit var ivBackdrop: ImageView
-    private lateinit var ivPoster : ImageView
+    private lateinit var ivPoster: ImageView
     private lateinit var tvDescription: TextView
     private lateinit var tvRate: TextView
     private lateinit var tvLanguage: TextView
     private lateinit var ivBack: ImageView
     private lateinit var ivFavourite: ImageView
-    private lateinit var tvVoteCount : TextView
+    private lateinit var tvVoteCount: TextView
 
     private lateinit var characterAdapter: CharacterAdapter
     private lateinit var categoryAdapter: CategoryAdapter
@@ -45,7 +42,10 @@ class FilmActivity : AppCompatActivity() {
     private lateinit var linearHorizon: LinearLayoutManager
     private lateinit var linearVerti: LinearLayoutManager
     private lateinit var gridLayoutManager: GridLayoutManager
-    private val viewModel : FilmViewModel by viewModels()
+    private val viewModel: DetailViewModel by viewModels()
+    private lateinit var detail: Detail
+
+    private lateinit var favoriteFragment: FavoriteFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,25 +55,23 @@ class FilmActivity : AppCompatActivity() {
 
         init()
         getRecyclerView()
-        eventOnClick()
         eventRegisterObs()
-
+        eventOnClick()
         viewModel.getListDetail(id)
         viewModel.getListVideo(id)
+        viewModel.checkLikeDetail(id)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun eventRegisterObs() {
-        viewModel.liveDataDetail.observe(this, Observer {
-            t->
-            when(t){
-                is FilmViewModel.GetListDetail.Error -> Toast.makeText(
+        viewModel.liveDataDetail.observe(this, { t ->
+            when (t) {
+                is DetailViewModel.GetListDetail.Error -> Toast.makeText(
                     this,
                     t.message,
                     Toast.LENGTH_SHORT
                 ).show()
 
-                is FilmViewModel.GetListDetail.Success ->{
+                is DetailViewModel.GetListDetail.Success -> {
                     t.listDetail
 
                     tvTitle.text = t.listDetail?.title
@@ -82,7 +80,7 @@ class FilmActivity : AppCompatActivity() {
                         .error(R.drawable.loading)
                         .into(ivBackdrop)
                     Glide.with(ivPoster)
-                        .load("https://image.tmdb.org/t/p/w500${t.listDetail?.backdropPath}")
+                        .load("https://image.tmdb.org/t/p/w500${t.listDetail?.posterPath}")
                         .error(R.drawable.loading)
                         .into(ivPoster)
 
@@ -92,38 +90,57 @@ class FilmActivity : AppCompatActivity() {
                     tvDescription.text = t.listDetail?.overview
                     tvVoteCount.text = "${t.listDetail?.voteCount} votes"
 
-                    categoryAdapter.setListCategory(t.listDetail?.genres as MutableList<Genre>)
-                    characterAdapter.setListCharacter(t.listDetail.productionCompanies as MutableList<ProductionCompany>)
+                    t.listDetail?.genres?.let { categoryAdapter.setListCategory(it) }
+                    t.listDetail?.productionCompanies?.let { characterAdapter.setListCharacter(it) }
 
+                    detail = t.listDetail!!
                 }
 
             }
         })
 
-
-        viewModel.liveDataVideo.observe(this, Observer {
-            t->
-            when(t){
-                is FilmViewModel.GetListVideo.Error -> t.message
-                is FilmViewModel.GetListVideo.Success -> {
-                    t.listVideo?.results
-
-                    trailerAdapter.setListTrailer(t.listVideo?.results as MutableList<Result>)
+        viewModel.liveDataVideo.observe(this, { t ->
+            when (t) {
+                is DetailViewModel.GetListVideo.Error -> t.message
+                is DetailViewModel.GetListVideo.Success -> {
+                    t.listVideo.results
+                    trailerAdapter.setListTrailer(t.listVideo.results)
                 }
+            }
+        })
+
+        viewModel.insertDetail.observe(this, { t ->
+            when (t) {
+                is DetailViewModel.InsertDetail.Error -> Toast.makeText(
+                    this,
+                    "Insert UnSuccess",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                is DetailViewModel.InsertDetail.Success -> {
+                    t.detail
+                    Toast.makeText(this, "Insert Success", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+
+        viewModel.checkLike.observe(this, { t ->
+            when (t) {
+                is DetailViewModel.CheckLikeState.Success -> changeFavourite(true)
+                is DetailViewModel.CheckLikeState.Error -> changeFavourite(false)
             }
         })
     }
-
 
     private fun eventOnClick() {
         ivBack.setOnClickListener {
             finish()
         }
         ivFavourite.setOnClickListener {
-            changeFavourite()
+            viewModel.insertDetail(detail)
+            changeFavourite(true)
         }
     }
-
 
     private fun init() {
         tvTitle = findViewById(R.id.tv_nameFilm)
@@ -147,10 +164,10 @@ class FilmActivity : AppCompatActivity() {
 
         gridLayoutManager = GridLayoutManager(this, 2)
 
+        favoriteFragment = FavoriteFragment()
     }
 
-
-    fun getRecyclerView() {
+    private fun getRecyclerView() {
         recyclerViewCharacter.layoutManager = linearHori
         recyclerViewCharacter.setHasFixedSize(true)
         recyclerViewCharacter.adapter = characterAdapter
@@ -165,11 +182,16 @@ class FilmActivity : AppCompatActivity() {
         recyclerViewTrailer.adapter = trailerAdapter
     }
 
-    private fun changeFavourite() {
-        ivFavourite.setImageResource(
-            R.drawable.favorite_fill_white
-        )
+    private fun changeFavourite(isUpdate: Boolean) {
+        if(isUpdate){
+            ivFavourite.setImageResource(
+                R.drawable.favorite_fill_white
+            )
+        }else{
+            ivFavourite.setImageResource(
+                R.drawable.favourite_white
+            )
+        }
     }
-
 }
 

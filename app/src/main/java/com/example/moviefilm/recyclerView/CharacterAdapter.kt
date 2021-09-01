@@ -13,8 +13,8 @@ import com.example.moviefilm.pojo.model.detail.ProductionCompany
 class CharacterAdapter : RecyclerView.Adapter<CharacterAdapter.CharacterVH>() {
     private var listCharacter = mutableListOf<ProductionCompany>()
 
-    fun setListCharacter(listCharacter: MutableList<ProductionCompany>){
-        this.listCharacter = listCharacter
+    fun setListCharacter(listCharacter: List<ProductionCompany>){
+        this.listCharacter.addAll(listCharacter)
         notifyDataSetChanged()
     }
     class CharacterVH(view: View): RecyclerView.ViewHolder(view){

@@ -1,56 +1,61 @@
 package com.example.moviefilm.pojo.model.detail
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "detail")
 data class Detail(
     @SerializedName("adult")
-    val adult: Boolean,
+    val adult: Boolean? = false,
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String? = null,
     @SerializedName("belongs_to_collection")
-    val belongsToCollection: BelongsToCollection,
+    val belongsToCollection: BelongsToCollection? = null,
     @SerializedName("budget")
-    val budget: Int,
+    val budget: Int? = 0,
     @SerializedName("genres")
-    val genres: List<Genre>,
+    val genres: List<Genre>? = null,
     @SerializedName("homepage")
-    val homepage: String,
+    val homepage: String? = null,
+
     @SerializedName("id")
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int? = 0,
     @SerializedName("imdb_id")
-    val imdbId: String,
+    val imdbId: String? = null,
     @SerializedName("original_language")
-    val originalLanguage: String,
+    val originalLanguage: String? = null,
     @SerializedName("original_title")
-    val originalTitle: String,
+    val originalTitle: String? = null,
     @SerializedName("overview")
-    val overview: String,
+    val overview: String? = null,
     @SerializedName("popularity")
-    val popularity: Double,
+    val popularity: Double? = null,
     @SerializedName("poster_path")
-    val posterPath: String,
+    val posterPath: String? = null,
     @SerializedName("production_companies")
-    val productionCompanies: List<ProductionCompany>,
-    @SerializedName("production_countries")
-    val productionCountries: List<ProductionCountry>,
+    val productionCompanies: List<ProductionCompany>? = null,
+//    @SerializedName("production_countries")
+//    val productionCountries: List<ProductionCountry>? = null,
     @SerializedName("release_date")
-    val releaseDate: String,
+    val releaseDate: String? = null,
     @SerializedName("revenue")
-    val revenue: Int,
+    val revenue: Int? = 0,
     @SerializedName("runtime")
-    val runtime: Int,
-    @SerializedName("spoken_languages")
-    val spokenLanguages: List<SpokenLanguage>,
+    val runtime: Int? = 0,
+//    @SerializedName("spoken_languages")
+//    val spokenLanguages: List<SpokenLanguage>? = null,
     @SerializedName("status")
-    val status: String,
+    val status: String? = null,
     @SerializedName("tagline")
-    val tagline: String,
+    val tagline: String? = null,
     @SerializedName("title")
-    val title: String,
+    val title: String? = null,
     @SerializedName("video")
-    val video: Boolean,
+    val video: Boolean? = false,
     @SerializedName("vote_average")
-    val voteAverage: Double,
+    val voteAverage: Double? = null,
     @SerializedName("vote_count")
-    val voteCount: Int
+    val voteCount: Int? = 0
 )
