@@ -1,12 +1,14 @@
 package com.example.moviefilm.activity
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +25,8 @@ import kotlinx.android.synthetic.main.activity_film.*
 @AndroidEntryPoint
 class DetailActivity : AppCompatActivity() {
     private var id: Int = 0
+
+    private var isCheck = false
 
     private lateinit var tvTitle: TextView
     private lateinit var tvDate: TextView
@@ -46,6 +50,8 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var detail: Detail
 
     private lateinit var favoriteFragment: FavoriteFragment
+    private lateinit var fragmentManager: FragmentManager
+    private lateinit var transaction: FragmentTransaction
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,9 +63,19 @@ class DetailActivity : AppCompatActivity() {
         getRecyclerView()
         eventRegisterObs()
         eventOnClick()
-        viewModel.getListDetail(id)
+        viewModel.getDetail(id)
         viewModel.getListVideo(id)
         viewModel.checkLikeDetail(id)
+
+    }
+
+    private fun sendId(){
+        val bundle = Bundle()
+        bundle.putInt("keyIDLike", id)
+        favoriteFragment.arguments = bundle
+
+        transaction.replace(R.id.content, favoriteFragment).commit()
+        transaction.hide(favoriteFragment)
     }
 
     private fun eventRegisterObs() {
@@ -136,11 +152,19 @@ class DetailActivity : AppCompatActivity() {
         ivBack.setOnClickListener {
             finish()
         }
-        ivFavourite.setOnClickListener {
-            viewModel.insertDetail(detail)
-            changeFavourite(true)
+          ivFavourite.setOnClickListener {
+              if(!isCheck){
+                  changeFavourite(true)
+                  viewModel.insertDetail(detail)
+              }else {
+                  changeFavourite(false)
+                  sendId()
+              }
+
         }
+
     }
+
 
     private fun init() {
         tvTitle = findViewById(R.id.tv_nameFilm)
@@ -165,6 +189,8 @@ class DetailActivity : AppCompatActivity() {
         gridLayoutManager = GridLayoutManager(this, 2)
 
         favoriteFragment = FavoriteFragment()
+        fragmentManager = supportFragmentManager
+        transaction = fragmentManager.beginTransaction()
     }
 
     private fun getRecyclerView() {
@@ -185,12 +211,14 @@ class DetailActivity : AppCompatActivity() {
     private fun changeFavourite(isUpdate: Boolean) {
         if(isUpdate){
             ivFavourite.setImageResource(
-                R.drawable.favorite_fill_white
+               R.drawable.favorite_fill_white
             )
+            isCheck = true
         }else{
             ivFavourite.setImageResource(
                 R.drawable.favourite_white
             )
+            isCheck = false
         }
     }
 }

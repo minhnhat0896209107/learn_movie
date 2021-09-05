@@ -41,7 +41,7 @@ class DetailViewModel @ViewModelInject constructor(
         }
     }
 
-    fun getListDetail(id: Int) {
+    fun getDetail(id: Int) {
         detailUseCase.excute(id)
             .enqueue(object : Callback<Detail> {
                 override fun onResponse(call: Call<Detail>, response: Response<Detail>) {
@@ -58,11 +58,11 @@ class DetailViewModel @ViewModelInject constructor(
     fun insertDetail(detail : Detail){
          val insert = insertDetailUseCase.excute(detail)
 
-        if (insert != null){
+        if (insert){
             _insertDetail.postValue(InsertDetail.Success(detail))
         }
         else{
-            _insertDetail.postValue(InsertDetail.Error())
+            _insertDetail.postValue(InsertDetail.Error)
         }
 
     }
@@ -91,7 +91,7 @@ class DetailViewModel @ViewModelInject constructor(
         class Success(val listVideo: ListVideo) : GetListVideo()
     }
     sealed class InsertDetail {
-        class Error: InsertDetail()
+        object Error: InsertDetail()
         class Success(val detail: Detail?) : InsertDetail()
     }
     sealed class CheckLikeState{

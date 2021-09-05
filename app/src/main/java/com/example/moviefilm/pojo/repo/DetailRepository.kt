@@ -18,5 +18,7 @@ class DetailRepository @Inject constructor(
     fun getListDetail() : List<Detail> {
         return iDetailDao.getAllDetail()
     }
-
+    fun getUnLike(idDetail: Int)  {
+        return iDetailDao.deleteDetail(idDetail)
+    }
 }

@@ -14,7 +14,7 @@ interface IDetailDao {
     @Query("SELECT *FROM detail")
     fun getAllDetail(): List<Detail>
 
-    @Delete
-    fun deleteDetail(detail: Detail)
+    @Query("DELETE FROM detail WHERE id= :id")
+    fun deleteDetail(id: Int)
 
 }

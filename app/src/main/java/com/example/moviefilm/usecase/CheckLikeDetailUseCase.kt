@@ -12,7 +12,6 @@ class CheckLikeDetailUseCase @Inject constructor(
         for(item : Detail in listDetail){
             if (id == item.id){
                 return true
-                continue
             }
         }
         return false

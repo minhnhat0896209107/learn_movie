@@ -2,6 +2,7 @@ package com.example.moviefilm.fragment.favourite
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ class FavoriteFragment : Fragment() {
 
     private val viewModel: FavoriteViewModel by viewModels()
     private lateinit var favoriteAdapter: FavoriteAdapter
+    private var idLike = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,16 +40,23 @@ class FavoriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         init()
         eventObs()
+        val bundle = arguments
+        if (bundle != null){
+            idLike =  bundle.getInt("keyIDLike", 0)
+            Log.d("idLike", " = $idLike")
+        }
         viewModel.getListFavourite()
-        swipeRefreshLayout?.setOnRefreshListener(object : SwipeRefreshLayout.OnRefreshListener {
-            override fun onRefresh() {
-                viewModel.getListFavourite()
-                Handler().
-                postDelayed({
-                        swipeRefreshLayout.isRefreshing = false
-                    }, 1000)
-            }
-        })
+        viewModel.getUnLikeDetail(idLike)
+        refreshData()
+    }
+
+    private fun refreshData(){
+        swipeRefreshLayout?.setOnRefreshListener {
+            viewModel.getListFavourite()
+            Handler().postDelayed({
+                swipeRefreshLayout.isRefreshing = false
+            }, 1000)
+        }
     }
 
     private fun eventObs() {
@@ -55,13 +64,21 @@ class FavoriteFragment : Fragment() {
             when (t) {
                 is FavoriteViewModel.FavoriteState.Error -> Toast.makeText(
                     context,
-                    "ERROR",
+                    "List Favorite Null",
                     Toast.LENGTH_SHORT
                 ).show()
                 is FavoriteViewModel.FavoriteState.Success -> {
                     swipeRefreshLayout.isEnabled = true
-                    loadData(t.detail)
+                    favoriteAdapter.setListFavourite(t.detail)
                 }
+            }
+        })
+
+        viewModel.unLikeDetail.observe(viewLifecycleOwner, { t->
+            when(t){
+                is FavoriteViewModel.UnLikeState.Success -> Toast.makeText(context, "Un like success", Toast.LENGTH_SHORT).show()
+
+                is FavoriteViewModel.UnLikeState.Error -> Toast.makeText(context, "UnLike don't success", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -76,7 +93,5 @@ class FavoriteFragment : Fragment() {
 
         }
     }
-    private fun loadData(detail: List<Detail>){
-        favoriteAdapter.setListFavourite(detail)
-    }
+
 }
