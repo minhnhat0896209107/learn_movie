@@ -74,8 +74,14 @@ class DetailActivity : AppCompatActivity() {
         bundle.putInt("keyIDLike", id)
         favoriteFragment.arguments = bundle
 
-        transaction.replace(R.id.content, favoriteFragment).commit()
-        transaction.hide(favoriteFragment)
+        try {
+            transaction.replace(R.id.content, favoriteFragment)
+            transaction.addToBackStack(null).commit()
+            transaction.hide(favoriteFragment)
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
+
     }
 
     private fun eventRegisterObs() {
