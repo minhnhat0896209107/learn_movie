@@ -57,6 +57,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_film)
 
+
         id = intent.getIntExtra("keyId", 0)
 
         init()

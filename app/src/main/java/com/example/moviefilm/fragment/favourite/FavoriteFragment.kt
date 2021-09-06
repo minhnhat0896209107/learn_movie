@@ -36,6 +36,11 @@ class FavoriteFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_favorite, container, false)
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.getListFavourite()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
